@@ -1,0 +1,14 @@
+---
+controller_configuration_projects_async_retries: 60
+controller_configuration_projects_async_delay: 5
+controller_projects:
+  - name: Demo-Project-Prod-HR-CaaC
+    scm_type: git
+    scm_url: https://github.com/rlopez133/ocp-virt.git
+    scm_branch: main
+    scm_clean: true
+    description: Prod-HR-CaaC project
+    organization: Default
+    wait: true
+    update_project: true
+...

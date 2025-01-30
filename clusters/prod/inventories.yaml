@@ -1,0 +1,9 @@
+---
+# Commented out content is serving as example for you to add new content.
+controller_inventories:
+  - name: Inventory-Prod-HR-CaaC
+    organization: Prod-HR-CaaC
+    description: Default Inventory for Prod-HR-CaaC
+    prevent_instance_group_fallback: false
+...
+

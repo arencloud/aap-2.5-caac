@@ -1,0 +1,11 @@
+---
+platform_teams:
+  - name: prod-hr-team-admins
+    organization: Prod-HR-CaaC
+  - name: prod-hr-team-operators
+    organization: Prod-HR-CaaC
+  #- name: prod-it-team-admins
+  #  organization: Prod-IT-CaaC
+  #- name: prod-it-team-operators
+  #  organization: Prod-IT-CaaC
+...

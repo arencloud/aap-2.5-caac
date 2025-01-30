@@ -1,0 +1,154 @@
+---
+- name: Ansible platform configuration
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/common.yml
+  tasks:
+    - name: Include vars from configs directory - {{ gateway_configs_dir | basename }}
+      ansible.builtin.include_vars:
+        dir: "{{ gateway_configs_dir }}"
+        extensions:
+          - yaml
+          - yml
+      tags:
+        - always
+    - name: Add organizations
+      ansible.builtin.include_role:
+        name: platform-organizations
+        apply:
+          tags: organizations
+      vars:
+      # platform_organizations: "{{ platform_organization_list }}"
+      when: platform_organizations is defined
+      tags:
+        - organizations
+
+    - name: Add teams
+      ansible.builtin.include_role:
+        name: platform-teams
+        apply:
+          tags: teams
+      when: platform_teams is defined
+      tags:
+        - teams
+
+    - name: Add Platform Authenticator
+      ansible.builtin.include_role:
+        name: platform-authenticator
+        apply:
+          tags: authenticator
+      vars:
+        platform_authenticator_configurations: "{{ platform_authenticator_configuration }}"
+      when: platform_authenticator_configuration is defined
+      tags:
+        - authenticator
+
+    - name: Add Platform Authenticator mapping
+      ansible.builtin.include_role:
+        name: platform-authenticator-maps
+        apply:
+          tags: authenticator-maps
+      vars:
+        platform_authenticator_maps: "{{ platform_maps }}"
+      when: platform_maps is defined
+      tags:
+        - authenticator-maps
+
+    - name: Add credentials
+      ansible.builtin.include_role:
+        name: controller-credentials
+        apply:
+          tags: credentials
+      when: controller_credentials is defined
+      tags:
+        - credentials
+
+    - name: Add credentials types
+      ansible.builtin.include_role:
+        name: controller-credentials-types
+        apply:
+          tags: credentials-types
+      when: controller_credential_types is defined
+      tags:
+        - credentials-types
+
+    - name: Add projects
+      ansible.builtin.include_role:
+        name: controller-projects
+        apply:
+          tags: projects
+      when: controller_projects is defined
+      tags:
+        - projects
+
+    - name: Add projects
+      ansible.builtin.include_role:
+        name: controller-projects-update
+        apply:
+          tags:
+            - project-updates
+      when: controller_projects is defined
+      tags:
+        - project-updates
+
+    - name: Add inventories
+      ansible.builtin.include_role:
+        name: controller-inventories
+        apply:
+          tags: inventories
+      when: controller_inventories is defined
+      tags:
+        - inventories
+
+    - name: Add inventories sourcies
+      ansible.builtin.include_role:
+        name: controller-inventory_sources
+        apply:
+          tags: inventory-sources
+      when: controller_inventory_sources is defined
+      tags:
+        - inventory-sources
+
+    - name: Add managed hosts
+      ansible.builtin.include_role:
+        name: controller-hosts
+        apply:
+          tags: hosts
+      when: controller_hosts is defined
+      tags:
+        - hosts
+
+    - name: Add templates
+      ansible.builtin.include_role:
+        name: controller-job-templates
+        apply:
+          tags: templates
+      when: controller_templates is defined
+      tags:
+        - templates
+
+    - name: Add Workflow templates
+      ansible.builtin.include_role:
+        name: controller-workflow-job-templates
+        apply:
+          tags: workflow-templates
+      when: controller_workflows is defined
+      tags:
+        - workflow-templates
+
+    - name: print
+      debug:
+        msg: "{{ controller_notifications }}"
+      tags:
+        - deb
+
+    - name: Add notifications
+      ansible.builtin.include_role:
+        name: controller-notification-templates
+        apply:
+          tags: notifications
+      when: controller_notifications is defined
+      tags:
+        - notifications

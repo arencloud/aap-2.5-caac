@@ -1,0 +1,9 @@
+gateway_validate_certs: false
+gateway_username: "{{ lookup('env','GATEWAY_USER') }}"
+gateway_password: "{{ lookup('env','GATEWAY_PWD') }}"
+gateway_hostname: "{{ lookup('env','GATEWAY_HOST') }}"
+gateway_request_timeout: 900
+
+export_platform_dir: platform_config_export
+
+gateway_configs_dir: "clusters/prod"

@@ -1,0 +1,52 @@
+---
+- name: Ansible Platform MAP configuration
+  ansible.platform.authenticator_map:
+    name: "{{ __platform_authenticator_maps_item.name | mandatory }}"
+    new_name: "{{ __platform_authenticator_maps_item.new_name | default(omit) }}"
+    authenticator: "{{ __platform_authenticator_maps_item.authenticator | default(omit) }}"
+    new_authenticator: "{{ __platform_authenticator_maps_item.new_authenticator | default(omit) }}"
+    revoke: "{{ __platform_authenticator_maps_item.revoke | default(omit) }}"
+    map_type: "{{ __platform_authenticator_maps_item.map_type | default(omit) }}"
+    team: "{{ __platform_authenticator_maps_item.team | default(omit) }}"
+    organization: "{{ __platform_authenticator_maps_item.organization | default(omit) }}"
+    role: "{{ __platform_authenticator_maps_item.role | default(omit) }}"
+    triggers: "{{ __platform_authenticator_maps_item.triggers | default(omit) }}"
+    order: "{{ __platform_authenticator_maps_item.order | default(omit) }}"
+    state: "{{ __platform_authenticator_maps_item.state | default(gateway_state | default(omit, true)) }}"
+
+
+    # Role Standard Options
+    gateway_config_file:   "{{ gateway_config_file | default(omit, true) }}"
+    gateway_hostname:          "{{ gateway_hostname | default(omit, true) }}"
+    gateway_password:      "{{ gateway_password | default(omit, true) }}"
+    gateway_username:      "{{ gateway_username | default(omit, true) }}"
+    gateway_token:    "{{ gateway_token | default(omit, true) }}"
+    gateway_request_timeout:          "{{ gateway_request_timeout | default(omit, true) }}"
+    gateway_validate_certs:           "{{ gateway_validate_certs | default(omit) }}"
+  # controller_settings must be either a dictionary/mapping or a list of dictionaries
+  loop: "{{ platform_authenticator_maps is mapping | ternary([platform_authenticator_maps], platform_authenticator_maps) }}"
+  loop_control:
+    loop_var: __platform_authenticator_maps_item
+  no_log: "{{ platform_authenticator_maps_secure_logging }}"
+  async: 1000
+  poll: 0
+  register: __platform_authenticator_maps_job_async
+  changed_when: not __platform_authenticator_maps_job_async.changed
+  vars:
+    ansible_async_dir: '{{ platform_authenticator_maps_async_dir }}'
+
+- name: "Configure Authenticator Maps | Wait for finish the Authenticator maps creation"
+  ansible.builtin.async_status:
+    jid: "{{ __platform_authenticator_maps_job_async_results_item.ansible_job_id }}"
+  register: __platform_authenticator_maps_job_async_result
+  until: __platform_authenticator_maps_job_async_result.finished
+  retries: "{{ platform_authenticator_maps_async_retries }}"
+  delay: "{{ platform_authenticator_maps_async_delay }}"
+  loop: "{{ __platform_authenticator_maps_job_async.results }}"
+  loop_control:
+    loop_var: __platform_authenticator_maps_job_async_results_item
+  when: __platform_authenticator_maps_job_async_results_item.ansible_job_id is defined
+  no_log: "{{ platform_authenticator_maps_secure_logging }}"
+  vars:
+    ansible_async_dir: '{{ platform_authenticator_maps_async_dir }}'
+...

@@ -1,0 +1,8 @@
+---
+# list of dicts (or a single dict) describing the Controller settings
+platform_authenticator_maps: []
+platform_authenticator_maps_secure_logging: "{{ platform_configuration_secure_logging | default('false') }}"
+platform_authenticator_maps_async_retries: "{{ platform_configuration_async_retries | default(30) }}"
+platform_authenticator_maps_async_delay: "{{ platform_configuration_async_delay | default(1) }}"
+platform_authenticator_maps_async_dir: null
+...

@@ -1,0 +1,23 @@
+---
+controller_templates:
+  - name: Demo-Prod-HR-CaaC
+    description: Demo Job Template
+    job_type: run
+    inventory: Inventory-Prod-HR-CaaC
+    project: Demo-Project-Prod-HR-CaaC
+    organization: Prod-HR-CaaC
+    playbook: hello.yml
+    verbosity: 0
+    #extra_vars:
+      # target_hosts: localhost
+    ask_inventory_on_launch: false
+    ask_execution_environment_on_launch: false
+    ask_forks_on_launch: false
+    ask_instance_groups_on_launch: false
+    ask_job_slice_count_on_launch: false
+    ask_labels_on_launch: false
+    ask_timeout_on_launch: false
+    ask_limit_on_launch: false
+    prevent_instance_group_fallback: false
+...
+

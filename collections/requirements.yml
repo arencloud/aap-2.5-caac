@@ -1,0 +1,7 @@
+collections:
+  - name: ansible.platform
+    source: https://console.redhat.com/api/automation-hub/content/published
+    version: 2.5.0
+  - name: ansible.controller
+    source: https://console.redhat.com/api/automation-hub/content/published
+    version: 4.6.1

@@ -1,0 +1,61 @@
+---
+platform_authenticator_configuration:
+  - name: "Corporate LDAP"
+    type: ldap
+    configuration:
+      SERVER_URI:
+        - "{{ lookup('env','SRV_IDM') }}"
+      BIND_DN: "{{ lookup('env','BINDDN_IDM') }}"
+      BIND_PASSWORD: "{{ lookup('env','BIND_PWD') }}"
+      START_TLS: false
+      GROUP_TYPE: "MemberDNGroupType"
+      GROUP_TYPE_PARAMS:
+        name_attr: "cn"
+        member_attr: "member"
+      USER_SEARCH:
+        - 'cn=users,cn=accounts,dc=arencloud,dc=local'
+        - 'SCOPE_SUBTREE'
+        - '(uid=%(user)s)'
+      GROUP_SEARCH:
+        - 'cn=groups,cn=accounts,dc=arencloud,dc=local'
+        - 'SCOPE_SUBTREE'
+        - '(objectClass=posixgroup)'
+      USER_ATTR_MAP:
+        first_name: "givenName"
+        last_name: "sn"
+        email: "mail"
+  - name: "MS LDAP"
+    type: ldap
+    configuration:
+      SERVER_URI:
+        - "{{ lookup('env','SRV_MS') }}"
+      BIND_DN: "{{ lookup('env','BINDDN_MS') }}"
+      BIND_PASSWORD: "{{ lookup('env','BIND_PWD') }}"
+      START_TLS: false
+      GROUP_TYPE: "MemberDNGroupType"
+      GROUP_TYPE_PARAMS:
+        name_attr: "cn"
+        member_attr: "member"
+      USER_SEARCH:
+        - 'cn=Users,dc=demo,dc=com'
+        - 'SCOPE_SUBTREE'
+        - '(uid=%(user)s)'
+      GROUP_SEARCH:
+        - 'cn=Users,dc=demo,dc=com'
+        - 'SCOPE_SUBTREE'
+        - '(objectClass=posixGroup)'
+      USER_ATTR_MAP:
+        first_name: "givenName"
+        last_name: "sn"
+        email: "mail"
+  #- name: "OIDC"
+  #  type: 'oidc'
+  #  configuration:
+  #    #/.well-known/openid-configuration will append automatically - do not include in OIDC_ENDPOINT forward slash / at the end
+  #    OIDC_ENDPOINT: "https://<REPLACE>/realms/<REPLACE_REALM_NAME>"
+  #    KEY: "aap-oidc"
+  #    SECRET: "<REPLACE>"
+  #    JWT_ALGORITHMS:
+  #      - 'RS256' #add OIDC supported algorithm, can be multiple in that case will be tried
+
+...

@@ -1,0 +1,42 @@
+---
+- name: Ansible Platform LDAP configuration
+  ansible.platform.authenticator:
+    configuration:            "{{ __platform_authenticator_configuration_item.configuration | default(omit, true) }}"
+    name: "{{ __platform_authenticator_configuration_item.name | mandatory }}"
+    enabled: true
+    type: 'ansible_base.authentication.authenticator_plugins.{{ __platform_authenticator_configuration_item.type | mandatory }}'
+    # Role Standard Options
+    gateway_config_file:   "{{ gateway_config_file | default(omit, true) }}"
+    gateway_hostname:          "{{ gateway_hostname | default(omit, true) }}"
+    gateway_password:      "{{ gateway_password | default(omit, true) }}"
+    gateway_username:      "{{ gateway_username | default(omit, true) }}"
+    gateway_token:    "{{ gateway_token | default(omit, true) }}"
+    gateway_request_timeout:          "{{ gateway_request_timeout | default(omit, true) }}"
+    gateway_validate_certs:           "{{ gateway_validate_certs | default(omit) }}"
+  # controller_settings must be either a dictionary/mapping or a list of dictionaries
+  loop: "{{ platform_authenticator_configurations is mapping | ternary([platform_authenticator_configurations], platform_authenticator_configurations) }}"
+  loop_control:
+    loop_var: __platform_authenticator_configuration_item
+  no_log: "{{ platform_authenticator_secure_logging }}"
+  async: 1000
+  poll: 0
+  register: __platform_authenticator_job_async
+  changed_when: not __platform_authenticator_job_async.changed
+  vars:
+    ansible_async_dir: '{{ platform_configuration_async_dir }}'
+
+- name: "Configure Authenticators | Wait for finish the Authenticators creation"
+  ansible.builtin.async_status:
+    jid: "{{ __platform_authenticator_job_async_results_item.ansible_job_id }}"
+  register: __platform_authenticator_job_async_result
+  until: __platform_authenticator_job_async_result.finished
+  retries: "{{ platform_authenticator_async_retries }}"
+  delay: "{{ platform_authenticator_async_delay }}"
+  loop: "{{ __platform_authenticator_job_async.results }}"
+  loop_control:
+    loop_var: __platform_authenticator_job_async_results_item
+  when: __platform_authenticator_job_async_results_item.ansible_job_id is defined
+  no_log: "{{ platform_authenticator_secure_logging }}"
+  vars:
+    ansible_async_dir: '{{ platform_configuration_async_dir }}'
+...
