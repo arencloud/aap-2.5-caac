@@ -16,7 +16,7 @@ controller_notifications:
       port: 25
     messages:
       started:
-        message: "[] '{{ job_friendly_name }}{{ job.id }} started' []"
+        message: "{@{ '{@{ job_friendly_name }@}{@{ job.id }@} started' }@}"
       #success:
       #  message: "{{ '{{ job_friendly_name }} completed in {{ job.elapsed }} seconds' }}"
       #error:
