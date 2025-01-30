@@ -17,10 +17,10 @@ controller_notifications:
     messages:
       started:
         message: "{@{ '{@{ job_friendly_name }@}{@{ job.id }@} started' }@}"
-      #success:
-      #  message: "{{ '{{ job_friendly_name }} completed in {{ job.elapsed }} seconds' }}"
-      #error:
-      #  message: "{{ '{{ job_friendly_name }} FAILED! Please look at {{ job.url }}' }}"
+      success:
+        message: "{@{ '{@{ job_friendly_name }@} completed in {@{ job.elapsed }@} seconds' }@}"
+      error:
+        message: "{@{ '{@{ job_friendly_name }@} FAILED! Please look at {@{ job.url }@}' }@}"
   # - name: Email notification differential
   #   description: Send out emails for tower jobs
   #   organization: Default
